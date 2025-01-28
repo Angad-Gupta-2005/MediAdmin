@@ -1,12 +1,10 @@
-package com.angad.mediadmin.navigation.appnavigation
+package com.angad.mediadmin.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import com.angad.mediadmin.navigation.routes.Routes
 import com.angad.mediadmin.screens.AllUsersScreen
 import com.angad.mediadmin.screens.UserDetails
 import com.angad.mediadmin.viewmodels.MyViewModel
@@ -24,13 +22,9 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
 
         composable<Routes.UserDetailsRoutes>{ backStack ->
 
-        //    For back stack entry
-            val data: Routes.UserDetailsRoutes = backStack.toRoute()
-            UserDetails(
-                res = data,
-                viewModel = viewModel,
-                navController = navController
-            )
+            val userId: String = backStack.arguments?.getString("user_id") ?: ""
+            
+            UserDetails(id = userId, viewModel = viewModel, navController = navController)
 
         }
     }

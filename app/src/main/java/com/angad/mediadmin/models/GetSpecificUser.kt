@@ -1,6 +1,6 @@
 package com.angad.mediadmin.models
 
-data class GetAllUsersResponseItem(
+data class GetSpecificUser(
     val address: String,
     val block: Int,
     val date_of_account_creation: String,

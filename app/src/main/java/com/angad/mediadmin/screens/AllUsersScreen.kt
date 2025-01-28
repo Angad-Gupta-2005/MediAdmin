@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.angad.mediadmin.models.GetAllUsersResponseItem
-import com.angad.mediadmin.navigation.routes.Routes
+import com.angad.mediadmin.models.UserModelsItem
+import com.angad.mediadmin.navigation.Routes
 import com.angad.mediadmin.viewmodels.MyViewModel
 
 @Composable
@@ -78,6 +78,7 @@ fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hilt
                     .padding(8.dp)
 
             ) {
+            //    Making the toolbar
                  Row( modifier = Modifier.fillMaxWidth(),
                      verticalAlignment = Alignment.CenterVertically,
                      horizontalArrangement = Arrangement.Center
@@ -116,26 +117,14 @@ fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hilt
 }
 
 @Composable
-fun ShowUsersCard(res: GetAllUsersResponseItem, navController: NavController) {
+fun ShowUsersCard(res: UserModelsItem, navController: NavController) {
 
     Card(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .clickable {
                 navController.navigate(
-                    Routes.UserDetailsRoutes(
-                        address = res.address,
-                        approved = res.isApproved,
-                        block = res.block,
-                        date_of_account_creation = res.date_of_account_creation,
-                        email = res.email,
-                        id = res.id,
-                        name = res.name,
-                        password = res.password,
-                        phone = res.phone_number,
-                        pinCode = res.pin_code,
-                        user_id = res.user_id,
-                    )
+                    Routes.UserDetailsRoutes(user_id = res.user_id)
                 )
             }
             .fillMaxSize()
