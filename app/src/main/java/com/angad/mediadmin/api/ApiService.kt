@@ -1,5 +1,6 @@
 package com.angad.mediadmin.api
 
+import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -28,7 +29,7 @@ interface ApiService {
     @HTTP(method = "DELETE", path = "deleteSpecificUser", hasBody = true)
     suspend fun deleteSpecificUser(
         @Field("user_id") user_id: String
-    ): Response<UserModels>
+    ): Response<DeleteSpecificUserResponse>
 
 
 

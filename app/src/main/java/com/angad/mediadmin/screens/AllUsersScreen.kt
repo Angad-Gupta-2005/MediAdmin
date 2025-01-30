@@ -71,6 +71,7 @@ fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hilt
         state.value.data != null -> {
             Toast.makeText(context, "Data fetch successfully", Toast.LENGTH_SHORT).show()
             val users = state.value.data
+            state.value.data = null
 
             Column(
                 modifier = Modifier

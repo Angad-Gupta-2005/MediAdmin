@@ -2,6 +2,7 @@ package com.angad.mediadmin.repo
 
 import com.angad.mediadmin.api.ApiBuilder
 import com.angad.mediadmin.common.Results
+import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -59,9 +60,8 @@ class Repo @Inject constructor(private val apiBuilder: ApiBuilder){
 
 
 //    Function that delete specific user
-    suspend fun deleteSpecificUser(id: String): Flow<Results<Response<UserModels>>> = flow {
+    suspend fun deleteSpecificUser(id: String): Flow<Results<Response<DeleteSpecificUserResponse>>> = flow {
         emit(Results.Loading)
-
         try {
             val response = apiBuilder.api.deleteSpecificUser(id)
             if (response.isSuccessful) {

@@ -104,6 +104,27 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
     }
 
 
+//    Function that delete specific user
+    fun deleteSpecificUser(id: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteSpecificUser(id).collect{
+                when(it){
+                    is Results.Loading -> {
+                        _deleteSpecificUser.value = DeleteSpecificUserState( isLoading = true )
+                    }
+
+                    is Results.Error -> {
+                        _deleteSpecificUser.value = DeleteSpecificUserState( error = it.message, isLoading = false )
+                    }
+
+                    is Results.Success -> {
+                        _deleteSpecificUser.value = DeleteSpecificUserState( data = it.data.body(), isLoading = false)
+                    }
+                }
+            }
+        }
+    }
+
 //    Function that update specific user details
     fun updateUserInfo(
         user_id: String? = null,
@@ -154,7 +175,7 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
 data class GetAllUsersState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val data: UserModels? = null
+    var data: UserModels? = null
 )
 
 //   GetSpecificUser state
@@ -175,5 +196,5 @@ data class UpdateUserDetailsState(
 data class DeleteSpecificUserState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val data: DeleteSpecificUserResponse? = null
+    var data: DeleteSpecificUserResponse? = null
 )

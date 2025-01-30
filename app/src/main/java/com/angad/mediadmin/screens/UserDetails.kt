@@ -1,5 +1,6 @@
 package com.angad.mediadmin.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,7 +56,56 @@ fun UserDetails(
         }
     }
 
-//    Handling the state
+//    **** Work in future *****
+
+//    Handling the state of block user or approved user
+//    val blockState = viewModel.approveUser.collectAsState()
+//    when{
+//        blockState.value.isLoading -> {
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                CircularProgressIndicator()
+//            }
+//        }
+//
+//        blockState.value.error != null -> {
+//            Toast.makeText(context, blockState.value.error, Toast.LENGTH_SHORT).show()
+//        }
+//
+//        blockState.value.data != null -> {
+//            Toast.makeText(context,  "User block successfully", Toast.LENGTH_SHORT).show()
+//            blockState.value.data = null
+//        }
+//    }
+
+
+//    Handling the state of delete user
+    val deleteState = viewModel.deleteSpecificUser.collectAsState()
+    when{
+        deleteState.value.isLoading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        deleteState.value.error != null -> {
+            Toast.makeText(context, deleteState.value.error, Toast.LENGTH_SHORT).show()
+        }
+
+        deleteState.value.data != null -> {
+            val data = deleteState.value.data!!
+            Toast.makeText(context,  data.message, Toast.LENGTH_SHORT).show()
+            deleteState.value.data = null
+        }
+    }
+
+
+//    Handling the state of getSpecific user
     when{
 
         state.value.isLoading -> {
@@ -74,10 +124,10 @@ fun UserDetails(
 
         state.value.data != null -> {
             val data = state.value.data!!
-//            Log.d("isApproved", "UserDetails: ${data.isApproved}")
+            Log.d("isApproved", "UserDetails: ${data.isApproved}")
             var isChecked by remember { mutableStateOf(data.isApproved == 2) }
 
-//            Log.d("isApproved", "UserDetails: ${data.isApproved}")
+            Log.d("isApproved", "UserDetails: ${data.isApproved}")
             val userDetails = listOf(
                 "Name:" to data.name,
                 "User ID:" to data.user_id,
@@ -137,7 +187,8 @@ fun UserDetails(
                             modifier = Modifier.padding(10.dp),
                             onClick = {
                                 if (id != null){
-                                    //    Delete the user
+                                    viewModel.deleteSpecificUser(data.user_id)
+                                    navController.navigateUp()
                                 }
                             }) {
                             Text(text = "Delete User")
