@@ -12,4 +12,7 @@ sealed class Routes {
         val user_id: String
     )
 
+    @Serializable
+    data class EditUserScreen( val user_id: String )
+
 }

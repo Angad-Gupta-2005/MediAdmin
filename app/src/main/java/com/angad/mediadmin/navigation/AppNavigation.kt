@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.angad.mediadmin.screens.AllUsersScreen
+import com.angad.mediadmin.screens.EditUserUI
 import com.angad.mediadmin.screens.UserDetails
 import com.angad.mediadmin.viewmodels.MyViewModel
 
@@ -25,6 +26,14 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
             val userId: String = backStack.arguments?.getString("user_id") ?: ""
             
             UserDetails(id = userId, viewModel = viewModel, navController = navController)
+
+        }
+
+        composable<Routes.EditUserScreen>{ backStack ->
+
+            val userId: String = backStack.arguments?.getString("user_id") ?: ""
+
+            EditUserUI(id = userId, viewModel = viewModel, navController = navController)
 
         }
     }

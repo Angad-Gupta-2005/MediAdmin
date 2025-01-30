@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.angad.mediadmin.navigation.Routes
 import com.angad.mediadmin.viewmodels.MyViewModel
 
 @Composable
@@ -115,8 +116,11 @@ fun UserDetails(
                                 onCheckedChange = { checked ->
                                     isChecked = checked
                                     if (isChecked) {
+                                    //    For approved the user left
+                                    //    viewModel.approveUser(data.user_id, 2)
                                         viewModel.getSpecificUser(id!!)
                                     } else {
+                                    //    viewModel.approveUser(data.user_id, 1)
                                         viewModel.getSpecificUser(id!!)
                                     }
 
@@ -168,6 +172,17 @@ fun UserDetails(
                             ItemView(label = details.first, value = details.second)
                         }
                     }
+                }
+                
+            //    Creating a button that edit user profile
+                Button(
+                    onClick = {
+                        navController.navigate(
+                            Routes.EditUserScreen(user_id = data.user_id)
+                        )
+                    }
+                ) {
+                    Text(text = "Edit User Profile")
                 }
             }
         }
