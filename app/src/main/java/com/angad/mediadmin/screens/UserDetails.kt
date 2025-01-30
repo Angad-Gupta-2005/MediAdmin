@@ -74,8 +74,10 @@ fun UserDetails(
 
         state.value.data != null -> {
             val data = state.value.data!!
+//            Log.d("isApproved", "UserDetails: ${data.isApproved}")
             var isChecked by remember { mutableStateOf(data.isApproved == 2) }
 
+//            Log.d("isApproved", "UserDetails: ${data.isApproved}")
             val userDetails = listOf(
                 "Name:" to data.name,
                 "User ID:" to data.user_id,
@@ -117,10 +119,10 @@ fun UserDetails(
                                     isChecked = checked
                                     if (isChecked) {
                                     //    For approved the user left
-                                    //    viewModel.approveUser(data.user_id, 2)
+                                        viewModel.approveUser(data.user_id, 2)
                                         viewModel.getSpecificUser(id!!)
                                     } else {
-                                    //    viewModel.approveUser(data.user_id, 1)
+                                        viewModel.approveUser(data.user_id, 1)
                                         viewModel.getSpecificUser(id!!)
                                     }
 

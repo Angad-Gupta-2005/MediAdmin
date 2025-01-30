@@ -41,6 +41,22 @@ class Repo @Inject constructor(private val apiBuilder: ApiBuilder){
     }
 
 
+//    Function that approve the user
+    suspend fun approveUser(id: String, isApproved: Int): Flow<Results<Response<UpdateUserDetailsResponse>>> = flow{
+        emit(Results.Loading)
+        try {
+            val response = apiBuilder.api.approveUser(id, isApproved)
+            if (response.isSuccessful){
+                emit(Results.Success(response))
+            } else{
+                emit(Results.Error(response.message()))
+            }
+        } catch (e: Exception) {
+            emit(Results.Error(e.message.toString()))
+        }
+
+    }
+
 
 //    Function that delete specific user
     suspend fun deleteSpecificUser(id: String): Flow<Results<Response<UserModels>>> = flow {

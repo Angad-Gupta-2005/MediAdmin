@@ -34,6 +34,10 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
     private val _updateUserInfo  = MutableStateFlow(UpdateUserDetailsState())
     val updateUserInfo = _updateUserInfo.asStateFlow()
 
+//    Mutable state flow for approve user
+    private val _approveUser  = MutableStateFlow(UpdateUserDetailsState())
+    val approveUser = _approveUser.asStateFlow()
+
 
 //      Function that fetch all users details
     fun getAllUsers(){
@@ -76,6 +80,29 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
             }
         }
     }
+
+
+//    Function that approve user by admin
+    fun approveUser(user_id: String, isApproved: Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.approveUser(user_id, isApproved).collect{
+                when(it){
+                    is Results.Loading -> {
+                        _approveUser.value = UpdateUserDetailsState( isLoading = true)
+                    }
+
+                    is Results.Error -> {
+                        _approveUser.value = UpdateUserDetailsState( error = it.message, isLoading = false)
+                    }
+
+                    is Results.Success -> {
+                        _approveUser.value = UpdateUserDetailsState( data = it.data.body(), isLoading = false)
+                    }
+                }
+            }
+        }
+    }
+
 
 //    Function that update specific user details
     fun updateUserInfo(
@@ -141,7 +168,7 @@ data class GetSpecificUserState(
 data class UpdateUserDetailsState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val data: UpdateUserDetailsResponse? = null
+    var data: UpdateUserDetailsResponse? = null
 )
 
 //    Delete specific user state

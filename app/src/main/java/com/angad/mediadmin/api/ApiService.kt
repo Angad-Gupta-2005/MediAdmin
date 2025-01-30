@@ -48,4 +48,13 @@ interface ApiService {
         @Field("block") block: Int?
     ): Response<UpdateUserDetailsResponse>
 
+
+//    Function that approved the user by admin
+    @FormUrlEncoded
+    @PATCH("approveUser")
+    suspend fun approveUser(
+        @Field("user_id") user_id: String?,
+        @Field("isApproved") isApproved: Int?
+    ): Response<UpdateUserDetailsResponse>
+
 }

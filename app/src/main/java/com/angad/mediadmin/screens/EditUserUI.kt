@@ -52,6 +52,7 @@ fun EditUserUI(
         state.value.data != null -> {
             val data = state.value.data!!
             Toast.makeText(context, data.message, Toast.LENGTH_SHORT).show()
+            state.value.data = null
         }
     }
 
