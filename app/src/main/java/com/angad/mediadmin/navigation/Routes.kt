@@ -15,4 +15,6 @@ sealed class Routes {
     @Serializable
     data class EditUserScreen( val user_id: String )
 
+    @Serializable
+    object AddProductRoutes
 }

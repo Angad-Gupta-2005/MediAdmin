@@ -168,7 +168,7 @@ fun UserDetails(
                                 onCheckedChange = { checked ->
                                     isChecked = checked
                                     if (isChecked) {
-                                    //    For approved the user left
+    //  ********************************  For approved the user not working properly  **************************************************
                                         viewModel.approveUser(data.user_id, 2)
                                         viewModel.getSpecificUser(id!!)
                                     } else {

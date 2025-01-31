@@ -2,6 +2,7 @@ package com.angad.mediadmin.repo
 
 import com.angad.mediadmin.api.ApiBuilder
 import com.angad.mediadmin.common.Results
+import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
@@ -75,11 +76,7 @@ class Repo @Inject constructor(private val apiBuilder: ApiBuilder){
     }
 
 
-
-
-
 //    Function that update user details
-
     suspend fun updateUserInfo(
         user_id: String?,
         name: String?,
@@ -117,6 +114,29 @@ class Repo @Inject constructor(private val apiBuilder: ApiBuilder){
         }
     }
 
-
+//    Function that add product details
+    suspend fun addProduct(
+        productName: String?,
+        productPrice: Float?,
+        productCategory: String?,
+        productStock: Int?
+    ): Flow<Results<Response<AddProductResponse>>> = flow {
+        emit(Results.Loading)
+        try {
+            val response = apiBuilder.api.appProduct(
+                productName = productName,
+                productPrice = productPrice,
+                productCategory = productCategory,
+                productStock = productStock
+            )
+            if (response.isSuccessful){
+                emit(Results.Success(response))
+            } else {
+                emit(Results.Error(response.message()))
+            }
+        } catch (e: Exception){
+            emit(Results.Error(e.message.toString()))
+        }
+    }
 
 }

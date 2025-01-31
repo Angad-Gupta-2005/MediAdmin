@@ -1,5 +1,6 @@
 package com.angad.mediadmin.api
 
+import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
@@ -58,4 +59,13 @@ interface ApiService {
         @Field("isApproved") isApproved: Int?
     ): Response<UpdateUserDetailsResponse>
 
+//    Function that add product details
+    @FormUrlEncoded
+    @POST("addProduct")
+    suspend fun appProduct(
+        @Field("name") productName: String?,
+        @Field("price") productPrice: Float?,
+        @Field("category") productCategory: String?,
+        @Field("stock") productStock: Int?
+    ): Response<AddProductResponse>
 }

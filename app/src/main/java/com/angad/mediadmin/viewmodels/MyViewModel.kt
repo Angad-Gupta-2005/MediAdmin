@@ -3,6 +3,7 @@ package com.angad.mediadmin.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.angad.mediadmin.common.Results
+import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
@@ -37,6 +38,10 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
 //    Mutable state flow for approve user
     private val _approveUser  = MutableStateFlow(UpdateUserDetailsState())
     val approveUser = _approveUser.asStateFlow()
+
+//    Mutable state flow for add product
+    private val _addProduct = MutableStateFlow(AddProductState())
+    val addProduct = _addProduct.asStateFlow()
 
 
 //      Function that fetch all users details
@@ -169,6 +174,37 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
     }
 
 
+//    Function that add product
+    fun addProduct(
+        productName: String?,
+        productPrice: Float?,
+        productCategory: String?,
+        productStock: Int?
+    ){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.addProduct(
+                productName = productName,
+                productPrice = productPrice,
+                productCategory = productCategory,
+                productStock = productStock
+            ).collect{
+                when(it){
+                    is Results.Loading -> {
+                        _addProduct.value = AddProductState(isLoading = true)
+                    }
+
+                    is Results.Error -> {
+                        _addProduct.value = AddProductState(error = it.message, isLoading = false)
+                    }
+
+                    is Results.Success -> {
+                        _addProduct.value = AddProductState(data = it.data.body(), isLoading = false)
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 //   GetAllUsers state
@@ -197,4 +233,11 @@ data class DeleteSpecificUserState(
     val isLoading: Boolean = false,
     val error: String? = null,
     var data: DeleteSpecificUserResponse? = null
+)
+
+//    Add Product state
+data class AddProductState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val data: AddProductResponse? = null
 )
