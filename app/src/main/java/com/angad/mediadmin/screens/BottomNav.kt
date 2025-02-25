@@ -1,6 +1,7 @@
 package com.angad.mediadmin.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -22,6 +23,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.angad.mediadmin.models.BottomNavItem
 
@@ -40,13 +42,16 @@ fun BottomNav(navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar{
+            NavigationBar(
+                modifier = Modifier.height(70.dp)
+            ){
                 bottomItem.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = selectedIndex == index,
                         onClick = {
                             selectedIndex = index
                         },
+                        modifier = Modifier.padding(top = 20.dp),
                         icon = {
                             Icon(
                                 imageVector = if (selectedIndex == index) item.icon else item.unselectedIcon,
@@ -72,7 +77,7 @@ fun ContentScreen(modifier: Modifier, navController: NavController, selectedInde
 
         0 -> DashboardScreen()
         1 -> OrderScreen()
-        2 -> AddProduct(navController = navController)
+        2 -> AllProductsScreen(navController = navController)
         3 -> AllUsersScreen(navController = navController)
 
 //        0 -> navController.navigate(Routes.DashboardRoutes)

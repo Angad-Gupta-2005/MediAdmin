@@ -20,7 +20,7 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Routes.AllProductsRoutes) {
+    NavHost(navController = navController, startDestination = Routes.BottomNavRoutes) {
 
         composable<Routes.AllUsersUIRoutes>{
             AllUsersScreen(navController = navController)
