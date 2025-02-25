@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.angad.mediadmin.common.Results
 import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
+import com.angad.mediadmin.models.GetAllProductsResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -42,6 +43,11 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
 //    Mutable state flow for add product
     private val _addProduct = MutableStateFlow(AddProductState())
     val addProduct = _addProduct.asStateFlow()
+
+//    Mutable state flow for get all products
+    private val _getAllProducts = MutableStateFlow(GetAllProductsState())
+    val getAllProducts = _getAllProducts.asStateFlow()
+
 
 
 //      Function that fetch all users details
@@ -205,6 +211,28 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
         }
     }
 
+//    Function that fetch all products details
+    fun getAllProducts(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getAllProducts().collect{
+                when(it){
+                    is Results.Loading -> {
+                        _getAllProducts.value = GetAllProductsState( isLoading = true )
+                    }
+
+                    is Results.Error -> {
+                        _getAllProducts.value = GetAllProductsState( error = it.message, isLoading = false )
+                    }
+
+                    is Results.Success -> {
+                        _getAllProducts.value = GetAllProductsState( data = it.data.body(), isLoading = false)
+                    }
+                }
+            }
+
+        }
+    }
+
 }
 
 //   GetAllUsers state
@@ -241,3 +269,11 @@ data class AddProductState(
     val error: String? = null,
     val data: AddProductResponse? = null
 )
+
+//    Get all products state
+data class GetAllProductsState(
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val data: GetAllProductsResponse? = null
+)
+

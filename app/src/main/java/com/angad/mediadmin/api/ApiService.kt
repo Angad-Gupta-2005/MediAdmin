@@ -2,6 +2,7 @@ package com.angad.mediadmin.api
 
 import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
+import com.angad.mediadmin.models.GetAllProductsResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -68,4 +69,9 @@ interface ApiService {
         @Field("category") productCategory: String?,
         @Field("stock") productStock: Int?
     ): Response<AddProductResponse>
+
+//    Function that fetch all products
+    @GET("getAllProducts")
+    suspend fun getAllProducts(): Response<GetAllProductsResponse>
+
 }

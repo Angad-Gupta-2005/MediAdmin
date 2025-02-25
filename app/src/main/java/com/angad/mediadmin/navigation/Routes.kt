@@ -30,4 +30,12 @@ sealed class Routes {
     @Serializable
     object OrderScreenRoutes
 
+//    For get all products
+    @Serializable
+    object AllProductsRoutes
+
+    @Serializable
+    object AllOrdersRoutes
+
+
 }

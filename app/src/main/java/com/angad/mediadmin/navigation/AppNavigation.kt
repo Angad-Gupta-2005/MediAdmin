@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.angad.mediadmin.screens.AddProduct
+import com.angad.mediadmin.screens.AllProductsScreen
 import com.angad.mediadmin.screens.AllUsersScreen
 import com.angad.mediadmin.screens.BottomNav
 import com.angad.mediadmin.screens.DashboardScreen
@@ -19,7 +20,7 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Routes.BottomNavRoutes) {
+    NavHost(navController = navController, startDestination = Routes.AllProductsRoutes) {
 
         composable<Routes.AllUsersUIRoutes>{
             AllUsersScreen(navController = navController)
@@ -60,6 +61,10 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
             OrderScreen()
         }
 
+    //    For all products screen
+        composable<Routes.AllProductsRoutes> {
+            AllProductsScreen(navController = navController)
+        }
 
     }
 
