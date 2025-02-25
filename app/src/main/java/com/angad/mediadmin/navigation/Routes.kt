@@ -17,4 +17,17 @@ sealed class Routes {
 
     @Serializable
     object AddProductRoutes
+
+//    For bottom navigation
+    @Serializable
+    object BottomNavRoutes
+
+//    For Dashboard screen
+    @Serializable
+    object DashboardRoutes
+
+//    For order screen
+    @Serializable
+    object OrderScreenRoutes
+
 }
