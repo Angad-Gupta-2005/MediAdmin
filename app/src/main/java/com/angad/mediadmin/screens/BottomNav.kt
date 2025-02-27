@@ -76,7 +76,7 @@ fun ContentScreen(modifier: Modifier, navController: NavController, selectedInde
     when(selectedIndex){
 
         0 -> DashboardScreen()
-        1 -> OrderScreen()
+        1 -> OrderScreen(navController = navController)
         2 -> AllProductsScreen(navController = navController)
         3 -> AllUsersScreen(navController = navController)
 

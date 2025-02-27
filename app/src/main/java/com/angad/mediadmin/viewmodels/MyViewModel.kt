@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.angad.mediadmin.common.Results
 import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
+import com.angad.mediadmin.models.GetAllOrderResponse
 import com.angad.mediadmin.models.GetAllProductsResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
@@ -47,6 +48,10 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
 //    Mutable state flow for get all products
     private val _getAllProducts = MutableStateFlow(GetAllProductsState())
     val getAllProducts = _getAllProducts.asStateFlow()
+
+//    Mutable state flow for get all orders
+    private val _getAllOrders = MutableStateFlow(GetAllOrdersState())
+    val getAllOrders = _getAllOrders.asStateFlow()
 
 
 
@@ -233,6 +238,24 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
         }
     }
 
+//    Function that fetch all orders details
+    fun getAllOrders(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getAllOrders().collect {
+                when(it){
+                    is Results.Loading -> {
+                        _getAllOrders.value = GetAllOrdersState(loading = true)
+                    }
+                    is Results.Error -> {
+                        _getAllOrders.value = GetAllOrdersState(error = it.message, loading = false)
+                    }
+                    is Results.Success -> {
+                        _getAllOrders.value = GetAllOrdersState(data = it.data.body(), loading = false)
+                    }
+                }
+            }
+        }
+    }
 }
 
 //   GetAllUsers state
@@ -277,3 +300,9 @@ data class GetAllProductsState(
     val data: GetAllProductsResponse? = null
 )
 
+//    Get all order state
+data class GetAllOrdersState(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val data: GetAllOrderResponse? = null
+)

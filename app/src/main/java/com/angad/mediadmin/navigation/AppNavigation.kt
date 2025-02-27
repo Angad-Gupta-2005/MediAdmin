@@ -58,7 +58,7 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
 
     //    For order screen
         composable<Routes.OrderScreenRoutes> {
-            OrderScreen()
+            OrderScreen(navController = navController)
         }
 
     //    For all products screen

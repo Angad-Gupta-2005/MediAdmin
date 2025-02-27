@@ -4,6 +4,7 @@ import com.angad.mediadmin.api.ApiBuilder
 import com.angad.mediadmin.common.Results
 import com.angad.mediadmin.models.AddProductResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
+import com.angad.mediadmin.models.GetAllOrderResponse
 import com.angad.mediadmin.models.GetAllProductsResponse
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
@@ -155,5 +156,19 @@ class Repo @Inject constructor(private val apiBuilder: ApiBuilder){
         }
     }
 
+//    Function that fetch all order details
+    suspend fun getAllOrders(): Flow<Results<Response<GetAllOrderResponse>>> = flow {
+        emit(Results.Loading)
+        try {
+            val response = apiBuilder.api.getAllOrders()
+            if (response.isSuccessful){
+                emit(Results.Success(response))
+            } else {
+                emit(Results.Error(response.message()))
+            }
+        } catch (e: Exception){
+            emit(Results.Error(e.message.toString()))
+        }
+    }
 
 }
