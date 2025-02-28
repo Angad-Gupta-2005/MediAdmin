@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.angad.mediadmin.common.Results
 import com.angad.mediadmin.models.AddProductResponse
+import com.angad.mediadmin.models.ApprovedOrderResponse
+import com.angad.mediadmin.models.DeleteOrderResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetAllOrderResponse
 import com.angad.mediadmin.models.GetAllProductsResponse
+import com.angad.mediadmin.models.GetSpecificOrder
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -53,6 +56,17 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
     private val _getAllOrders = MutableStateFlow(GetAllOrdersState())
     val getAllOrders = _getAllOrders.asStateFlow()
 
+//    Mutable state flow for get specific order
+    private val _getSpecificOrder = MutableStateFlow(GetSpecificOrderState())
+    val getSpecificOrder = _getSpecificOrder.asStateFlow()
+
+//    Mutable state flow for approve order
+    private val _approvedOrder = MutableStateFlow(ApprovedOrderState())
+    val approvedOrder = _approvedOrder.asStateFlow()
+
+//    Mutable state flow for delete order
+    private val _deleteOrder = MutableStateFlow(DeleteOrderState())
+    val deleteOrder = _deleteOrder.asStateFlow()
 
 
 //      Function that fetch all users details
@@ -256,6 +270,72 @@ class MyViewModel @Inject constructor( private val repo: Repo) : ViewModel() {
             }
         }
     }
+
+//    Function that fetch specific order details
+    fun getSpecificOrder(orderId: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getSpecificOrder(orderId).collect{
+                when(it){
+                    is Results.Loading -> {
+                        _getSpecificOrder.value = GetSpecificOrderState(loading = true)
+                    }
+
+                    is Results.Error -> {
+                        _getSpecificOrder.value = GetSpecificOrderState( error = it.message, loading = false)
+                    }
+
+                    is Results.Success -> {
+                        _getSpecificOrder.value = GetSpecificOrderState( data = it.data.body(), loading = false)
+                    }
+                }
+            }
+        }
+    }
+
+//    Function that approved the order
+    fun approveOrder(orderId: String, isApproved: Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.approveOrder(orderId, isApproved).collect{
+                when(it){
+                    is Results.Loading -> {
+                        _approvedOrder.value = ApprovedOrderState(loading = true)
+                    }
+
+                    is Results.Error -> {
+                        _approvedOrder.value = ApprovedOrderState(error = it.message, loading = false)
+                    }
+
+                    is Results.Success -> {
+                        _approvedOrder.value = ApprovedOrderState(data = it.data.body(), loading = false)
+                    }
+                }
+            }
+        }
+    }
+
+
+//    Function that delete the specific order
+    fun deleteOrder(orderId: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteSpecificOrder(orderId).collect{
+                when(it){
+                    is Results.Loading -> {
+                        _deleteOrder.value = DeleteOrderState(loading = true)
+                    }
+
+                    is Results.Error -> {
+                        _deleteOrder.value = DeleteOrderState(error = it.message, loading = false)
+                    }
+
+                    is Results.Success -> {
+                        _deleteOrder.value = DeleteOrderState(data = it.data.body(), loading = false)
+                    }
+                }
+            }
+        }
+    }
+
+
 }
 
 //   GetAllUsers state
@@ -305,4 +385,25 @@ data class GetAllOrdersState(
     val loading: Boolean = false,
     val error: String? = null,
     val data: GetAllOrderResponse? = null
+)
+
+//    Get specific order state
+data class GetSpecificOrderState(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val data: GetSpecificOrder? = null
+)
+
+//    Approved order state
+data class ApprovedOrderState(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val data: ApprovedOrderResponse? = null
+)
+
+//    delete order state
+data class DeleteOrderState(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val data: DeleteOrderResponse? = null
 )

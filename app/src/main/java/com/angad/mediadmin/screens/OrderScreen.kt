@@ -1,6 +1,7 @@
 package com.angad.mediadmin.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.angad.mediadmin.models.GetAllOrderResponseItem
+import com.angad.mediadmin.navigation.Routes
 import com.angad.mediadmin.viewmodels.MyViewModel
 
 @Composable
@@ -82,6 +84,9 @@ fun ShowOrdersCard(res: GetAllOrderResponseItem, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(vertical = 8.dp)
+            .clickable {
+                navController.navigate(Routes.ApproveOrderRoutes(orderId = res.order_id))
+            }
             .fillMaxSize()
             .shadow(
                 elevation = 10.dp,

@@ -3,9 +3,12 @@ package com.angad.mediadmin.repo
 import com.angad.mediadmin.api.ApiBuilder
 import com.angad.mediadmin.common.Results
 import com.angad.mediadmin.models.AddProductResponse
+import com.angad.mediadmin.models.ApprovedOrderResponse
+import com.angad.mediadmin.models.DeleteOrderResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetAllOrderResponse
 import com.angad.mediadmin.models.GetAllProductsResponse
+import com.angad.mediadmin.models.GetSpecificOrder
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -170,5 +173,57 @@ class Repo @Inject constructor(private val apiBuilder: ApiBuilder){
             emit(Results.Error(e.message.toString()))
         }
     }
+
+
+//    Function that fetch specific order details
+    suspend fun getSpecificOrder(orderId: String): Flow<Results<Response<GetSpecificOrder>>> = flow {
+        emit(Results.Loading)
+        try {
+            val response = apiBuilder.api.getSpecificOrder(orderId)
+            if (response.isSuccessful){
+                emit(Results.Success(response))
+            } else {
+                emit(Results.Error(response.message()))
+            }
+        } catch (e: Exception){
+            emit(Results.Error(e.message.toString()))
+        }
+    }
+
+
+//    Function that approved the order
+    suspend fun approveOrder(
+        orderId: String,
+        isApproved: Int
+    ): Flow<Results<Response<ApprovedOrderResponse>>> = flow {
+        emit(Results.Loading)
+        try {
+            val response = apiBuilder.api.approveOrder(orderId, isApproved)
+            if (response.isSuccessful) {
+                emit(Results.Success(response))
+            } else {
+                emit(Results.Error(response.message()))
+            }
+        } catch (e: Exception) {
+            emit(Results.Error(e.message.toString()))
+        }
+    }
+
+
+//    Function that delete the specific order
+    suspend fun deleteSpecificOrder(orderId: String): Flow<Results<Response<DeleteOrderResponse>>> = flow {
+        emit(Results.Loading)
+        try {
+            val response = apiBuilder.api.deleteSpecificOrder(orderId)
+            if (response.isSuccessful){
+                emit(Results.Success(response))
+            } else {
+                emit(Results.Error(response.message()))
+            }
+        } catch (e: Exception){
+            emit(Results.Error(e.message.toString()))
+        }
+    }
+
 
 }

@@ -34,8 +34,8 @@ sealed class Routes {
     @Serializable
     object AllProductsRoutes
 
+//    For approve order screen
     @Serializable
-    object AllOrdersRoutes
-
+    data class ApproveOrderRoutes(val orderId: String)
 
 }

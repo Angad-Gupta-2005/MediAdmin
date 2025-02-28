@@ -1,9 +1,12 @@
 package com.angad.mediadmin.api
 
 import com.angad.mediadmin.models.AddProductResponse
+import com.angad.mediadmin.models.ApprovedOrderResponse
+import com.angad.mediadmin.models.DeleteOrderResponse
 import com.angad.mediadmin.models.DeleteSpecificUserResponse
 import com.angad.mediadmin.models.GetAllOrderResponse
 import com.angad.mediadmin.models.GetAllProductsResponse
+import com.angad.mediadmin.models.GetSpecificOrder
 import com.angad.mediadmin.models.GetSpecificUser
 import com.angad.mediadmin.models.UpdateUserDetailsResponse
 import com.angad.mediadmin.models.UserModels
@@ -78,5 +81,28 @@ interface ApiService {
 //    Function that fetch all order details
     @GET("getAllOrderDetails")
     suspend fun getAllOrders(): Response<GetAllOrderResponse>
+
+//    Function that fetch specific order details
+    @FormUrlEncoded
+    @POST("getSpecificOrder")
+    suspend fun getSpecificOrder(
+        @Field("order_id") orderId: String
+    ): Response<GetSpecificOrder>
+
+//    Function that approved the order
+    @FormUrlEncoded
+    @PATCH("approvedOrder")
+    suspend fun approveOrder(
+        @Field("order_id") orderId: String,
+        @Field("isApproved") isApproved: Int
+    ): Response<ApprovedOrderResponse>
+
+//    Function that delete specific order
+    @FormUrlEncoded
+    @HTTP(method = "DELETE", path = "deleteSpecificOrder", hasBody = true)
+    suspend fun deleteSpecificOrder(
+        @Field("order_id") orderId: String
+    ): Response<DeleteOrderResponse>
+
 
 }

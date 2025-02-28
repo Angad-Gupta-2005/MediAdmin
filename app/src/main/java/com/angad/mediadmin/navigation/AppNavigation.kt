@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.angad.mediadmin.screens.AddProduct
 import com.angad.mediadmin.screens.AllProductsScreen
 import com.angad.mediadmin.screens.AllUsersScreen
+import com.angad.mediadmin.screens.ApproveOrderScreen
 import com.angad.mediadmin.screens.BottomNav
 import com.angad.mediadmin.screens.DashboardScreen
 import com.angad.mediadmin.screens.EditUserUI
@@ -66,6 +67,11 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
             AllProductsScreen(navController = navController)
         }
 
+    //    For approved order screen
+        composable<Routes.ApproveOrderRoutes> { backStack ->
+            val orderId: String = backStack.arguments?.getString("orderId") ?: ""
+            ApproveOrderScreen(orderId = orderId,navController = navController, viewModel = viewModel)
+        }
     }
 
 }
