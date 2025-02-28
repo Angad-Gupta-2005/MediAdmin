@@ -405,5 +405,5 @@ data class ApprovedOrderState(
 data class DeleteOrderState(
     val loading: Boolean = false,
     val error: String? = null,
-    val data: DeleteOrderResponse? = null
+    var data: DeleteOrderResponse? = null
 )

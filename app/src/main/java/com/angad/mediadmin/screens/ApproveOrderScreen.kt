@@ -2,27 +2,11 @@ package com.angad.mediadmin.screens
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,13 +22,12 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
     val context = LocalContext.current
     val state = viewModel.getSpecificOrder.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         viewModel.getSpecificOrder(orderId)
     }
 
-//    Manage the delete order state
     val deleteState = viewModel.deleteOrder.collectAsState()
-    when{
+    when {
         deleteState.value.loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -53,18 +36,20 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                 CircularProgressIndicator()
             }
         }
+
         deleteState.value.error != null -> {
             Toast.makeText(context, deleteState.value.error, Toast.LENGTH_SHORT).show()
         }
 
         deleteState.value.data != null -> {
-            val data = deleteState.value.data!!
-            Toast.makeText(context, data.message, Toast.LENGTH_SHORT).show()
+            Log.d("TAG", "ApproveOrderScreen: Delete successful")
+            Toast.makeText(context, deleteState.value.data!!.message, Toast.LENGTH_SHORT).show()
+            deleteState.value.data = null
+            navController.navigateUp()
         }
     }
 
-//    Manage the getSpecificOrder state
-    when{
+    when {
         state.value.loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -80,39 +65,54 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
 
         state.value.data != null -> {
             val order = state.value.data!!
-            var isApproved by remember { mutableStateOf(order.isApproved) }
+            var isApproved by remember { mutableIntStateOf(order.isApproved) }
 
-        //    Design the UI
             Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()), // Scrollable content
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Order Approval Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(bottom = 12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp),
+                            .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = if (isApproved == 1) "Approved" else "Pending")
+                        Column {
+                            Text(
+                                text = "Order Status:",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = if (isApproved == 1) "✅ Approved" else "⏳ Pending",
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                color = if (isApproved == 1) Color.Green else Color.Red
+                            )
 
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                        //    For approved the user
                             Switch(
                                 checked = isApproved == 1,
                                 onCheckedChange = { isChecked ->
                                     isApproved = if (isChecked) 1 else 0
                                     viewModel.approveOrder(orderId, isApproved)
 
-                                    if (isApproved == 1){
-                                        Toast.makeText(context, "Order Approved", Toast.LENGTH_SHORT).show()
-                                    }
+                                    Toast.makeText(
+                                        context,
+                                        if (isApproved == 1) "Order Approved" else "Order Pending",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 },
                                 colors = SwitchDefaults.colors(
                                     checkedThumbColor = Color.Green,
@@ -125,45 +125,62 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                    //    Creating a button for delete the order
+                        // Delete Order Button
                         Button(
-                            onClick = {
-                                viewModel.deleteOrder(orderId)
-                                navController.navigateUp()
-                            }) {
-                            Text(text = "Delete Order")
+                            onClick = { viewModel.deleteOrder(orderId) },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Text(text = "🗑 Delete Order", color = Color.White)
                         }
                     }
                 }
 
-            //    Second card start here
+                // Order Details Card
                 Card(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                    shape = MaterialTheme.shapes.medium
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(15.dp)
-                    ) {
-                        Text(text = "Product Name: ${order.product_name}")
-                        Text(text = "Product Price: ${order.product_price}")
-                        Text(text = "Product Quantity: ${order.quantity}")
-                        Text(text = "User Name: ${order.user_name}")
-                        Text(text = "User Phone Number: ${order.phone_number}")
-                        Text(text = "User Address: ${order.address}")
-                        Text(text = "Order Status: ${if (order.isApproved == 1) "Approved" else "Pending"}")
-                        Text(text = "Order Date: ${order.date_of_order_creation}")
-                        Text(text = "Category: ${order.category}")
-                        Text(text = "Message: ${order.message}")
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Order Details",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
 
-                        Log.d("TAG", "ApproveOrderScreen: text")
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        OrderDetailRow("📦 Product Name:", order.product_name)
+                        OrderDetailRow("💰 Product Price:", "₹${order.product_price}")
+                        OrderDetailRow("🔢 Quantity:", order.quantity.toString())
+                        OrderDetailRow("👤 User Name:", order.user_name)
+                        OrderDetailRow("📞 Phone Number:", order.phone_number)
+                        OrderDetailRow("🏠 Address:", order.address)
+                        OrderDetailRow("🗓 Order Date:", order.date_of_order_creation)
+                        OrderDetailRow("🛒 Category:", order.category)
+                        OrderDetailRow("✉️ Message:", order.message)
                     }
                 }
-
             }
-
         }
+    }
+}
+
+// 🔹 Reusable Row for Order Details
+@Composable
+fun OrderDetailRow(label: String, value: String) {
+    Row(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(
+            text = label,
+            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = value,
+            fontWeight = androidx.compose.ui.text.font.FontWeight.Normal,
+            color = Color.DarkGray
+        )
     }
 }
