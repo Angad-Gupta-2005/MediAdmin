@@ -20,13 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MediAdminTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        AppNavigation()
-                    }
-
-                }
+                AppNavigation()
             }
         }
     }

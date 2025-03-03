@@ -42,16 +42,13 @@ fun BottomNav(navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar(
-                modifier = Modifier.height(70.dp)
-            ){
+            NavigationBar {
                 bottomItem.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = selectedIndex == index,
                         onClick = {
                             selectedIndex = index
                         },
-                        modifier = Modifier.padding(top = 20.dp),
                         icon = {
                             Icon(
                                 imageVector = if (selectedIndex == index) item.icon else item.unselectedIcon,

@@ -11,11 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.angad.mediadmin.viewmodels.MyViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel: MyViewModel = hiltViewModel()) {
 
@@ -67,103 +71,122 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
             val order = state.value.data!!
             var isApproved by remember { mutableIntStateOf(order.isApproved) }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()), // Scrollable content
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Order Approval Card
-                Card(
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(
+                            text = "Orders Details",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.SansSerif
+                        ) },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color(0xFF1976D2),
+                            titleContentColor = Color.White
+                        )
+                    )
+                }
+            ) { innerPadding ->
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                    shape = MaterialTheme.shapes.medium
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState()), // Scrollable content
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
+                    // Order Approval Card
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(horizontal = 8.dp, vertical = 10.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                        shape = MaterialTheme.shapes.medium
                     ) {
-                        Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Order Status:",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Text(
+                                    text = if (isApproved == 1) "✅ Approved" else "⏳ Pending",
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                    color = if (isApproved == 1) Color.Green else Color.Red
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                //    For approved the user
+                                Switch(
+                                    checked = isApproved == 1,
+                                    onCheckedChange = { isChecked ->
+                                        isApproved = if (isChecked) 1 else 0
+                                        viewModel.approveOrder(orderId, isApproved)
+
+                                        Toast.makeText(
+                                            context,
+                                            if (isApproved == 1) "Order Approved" else "Order Pending",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = Color.Green,
+                                        uncheckedThumbColor = Color.Red,
+                                        checkedTrackColor = Color.LightGray,
+                                        uncheckedTrackColor = Color.DarkGray
+                                    )
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            // Delete Order Button
+                            Button(
+                                onClick = { viewModel.deleteOrder(orderId) },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Text(text = "🗑 Delete Order", color = Color.White)
+                            }
+                        }
+                    }
+
+                    // Order Details Card
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                        shape = MaterialTheme.shapes.medium
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Order Status:",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = if (isApproved == 1) "✅ Approved" else "⏳ Pending",
+                                text = "Order Details",
+                                style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                                color = if (isApproved == 1) Color.Green else Color.Red
+                                color = MaterialTheme.colorScheme.primary
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                        //    For approved the user
-                            Switch(
-                                checked = isApproved == 1,
-                                onCheckedChange = { isChecked ->
-                                    isApproved = if (isChecked) 1 else 0
-                                    viewModel.approveOrder(orderId, isApproved)
-
-                                    Toast.makeText(
-                                        context,
-                                        if (isApproved == 1) "Order Approved" else "Order Pending",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = Color.Green,
-                                    uncheckedThumbColor = Color.Red,
-                                    checkedTrackColor = Color.LightGray,
-                                    uncheckedTrackColor = Color.DarkGray
-                                )
-                            )
+                            OrderDetailRow("📦 Product Name:", order.product_name)
+                            OrderDetailRow("💰 Product Price:", "₹${order.product_price}")
+                            OrderDetailRow("🔢 Quantity:", order.quantity.toString())
+                            OrderDetailRow("👤 User Name:", order.user_name)
+                            OrderDetailRow("📞 Phone Number:", order.phone_number)
+                            OrderDetailRow("🏠 Address:", order.address)
+                            OrderDetailRow("🗓 Order Date:", order.date_of_order_creation)
+                            OrderDetailRow("🛒 Category:", order.category)
+                            OrderDetailRow("✉️ Message:", order.message)
                         }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        // Delete Order Button
-                        Button(
-                            onClick = { viewModel.deleteOrder(orderId) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                            shape = MaterialTheme.shapes.small
-                        ) {
-                            Text(text = "🗑 Delete Order", color = Color.White)
-                        }
-                    }
-                }
-
-                // Order Details Card
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            text = "Order Details",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        OrderDetailRow("📦 Product Name:", order.product_name)
-                        OrderDetailRow("💰 Product Price:", "₹${order.product_price}")
-                        OrderDetailRow("🔢 Quantity:", order.quantity.toString())
-                        OrderDetailRow("👤 User Name:", order.user_name)
-                        OrderDetailRow("📞 Phone Number:", order.phone_number)
-                        OrderDetailRow("🏠 Address:", order.address)
-                        OrderDetailRow("🗓 Order Date:", order.date_of_order_creation)
-                        OrderDetailRow("🛒 Category:", order.category)
-                        OrderDetailRow("✉️ Message:", order.message)
                     }
                 }
             }
+
+
         }
     }
 }
