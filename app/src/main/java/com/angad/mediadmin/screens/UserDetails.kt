@@ -26,13 +26,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -41,7 +42,7 @@ import com.angad.mediadmin.viewmodels.MyViewModel
 
 @Composable
 fun UserDetails(
-    id: String? = null,
+    userId: String,
     viewModel: MyViewModel = hiltViewModel(),
     navController: NavController
 ) {
@@ -51,34 +52,34 @@ fun UserDetails(
     val state = viewModel.getSpecificUser.collectAsState()
 
     LaunchedEffect(Unit) {
-        if (id != null) {
-            viewModel.getSpecificUser(id)
-        }
+        viewModel.getSpecificUser(userId)
     }
 
 //    **** Work in future *****
 
 //    Handling the state of block user or approved user
-//    val blockState = viewModel.approveUser.collectAsState()
-//    when{
-//        blockState.value.isLoading -> {
-//            Box(
-//                modifier = Modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator()
-//            }
-//        }
-//
-//        blockState.value.error != null -> {
-//            Toast.makeText(context, blockState.value.error, Toast.LENGTH_SHORT).show()
-//        }
-//
-//        blockState.value.data != null -> {
-//            Toast.makeText(context,  "User block successfully", Toast.LENGTH_SHORT).show()
-//            blockState.value.data = null
-//        }
-//    }
+    val approvedState = viewModel.approveUser.collectAsState()
+
+    when{
+        approvedState.value.isLoading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        approvedState.value.error != null -> {
+            Toast.makeText(context, approvedState.value.error, Toast.LENGTH_SHORT).show()
+        }
+
+        approvedState.value.data != null -> {
+            val data = approvedState.value.data!!
+           // Toast.makeText(context, data.message , Toast.LENGTH_SHORT).show()
+            approvedState.value.data = null
+        }
+    }
 
 
 //    Handling the state of delete user
@@ -125,7 +126,7 @@ fun UserDetails(
         state.value.data != null -> {
             val data = state.value.data!!
             Log.d("isApproved", "UserDetails: ${data.isApproved}")
-            var isChecked by remember { mutableStateOf(data.isApproved == 2) }
+            var isApproved by remember { mutableIntStateOf(data.isApproved) }
 
             Log.d("isApproved", "UserDetails: ${data.isApproved}")
             val userDetails = listOf(
@@ -158,24 +159,28 @@ fun UserDetails(
                     ) {
                         Column( modifier = Modifier.padding(20.dp)) {
                             Text(
-                                text = "Block User",
-                                color = Color.Red
+                                text = "User Status:",
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = if (isApproved == 1) "✅ Approved" else "⏳ Pending",
+                                fontWeight = FontWeight.Bold,
+                                color = if (isApproved == 1) Color(0xFF08A508) else Color.Red
                             )
                             
                         //    Creating a switch
                             Switch(
-                                checked = isChecked,
-                                onCheckedChange = { checked ->
-                                    isChecked = checked
-                                    if (isChecked) {
-    //  ********************************  For approved the user not working properly  **************************************************
-                                        viewModel.approveUser(data.user_id, 2)
-                                        viewModel.getSpecificUser(id!!)
-                                    } else {
-                                        viewModel.approveUser(data.user_id, 1)
-                                        viewModel.getSpecificUser(id!!)
-                                    }
+                                checked = isApproved == 1,
+                                onCheckedChange = { isChecked ->
 
+                                    isApproved = if (isChecked) 1 else 0
+
+                                    viewModel.approveUser(user_id = userId, isApproved = isApproved)
+                                    Toast.makeText(
+                                        context,
+                                        if (isApproved == 1) "User Approved" else "Approval is pending",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             )
                         }
@@ -186,10 +191,8 @@ fun UserDetails(
                         Button(
                             modifier = Modifier.padding(10.dp),
                             onClick = {
-                                if (id != null){
-                                    viewModel.deleteSpecificUser(data.user_id)
-                                    navController.navigateUp()
-                                }
+                                viewModel.deleteSpecificUser(userId)
+                                navController.navigateUp()
                             }) {
                             Text(text = "Delete User")
                         }

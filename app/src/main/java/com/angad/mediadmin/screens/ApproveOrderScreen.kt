@@ -115,8 +115,8 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                                 )
                                 Text(
                                     text = if (isApproved == 1) "✅ Approved" else "⏳ Pending",
-                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                                    color = if (isApproved == 1) Color.Green else Color.Red
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isApproved == 1) Color(0xFF069B06) else Color.Red
                                 )
 
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -197,12 +197,12 @@ fun OrderDetailRow(label: String, value: String) {
     Row(modifier = Modifier.padding(vertical = 4.dp)) {
         Text(
             text = label,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = value,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Normal,
+            fontWeight = FontWeight.Normal,
             color = Color.DarkGray
         )
     }

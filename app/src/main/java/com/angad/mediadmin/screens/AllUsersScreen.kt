@@ -86,7 +86,7 @@ fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hilt
         }
     //    If it success then fetch the data
         state.value.data != null -> {
-            Toast.makeText(context, "Data fetch successfully", Toast.LENGTH_SHORT).show()
+           // Toast.makeText(context, "Data fetch successfully", Toast.LENGTH_SHORT).show()
             val users = state.value.data!!
            // state.value.data = null
 
@@ -194,7 +194,7 @@ fun UserCard(user: UserModelsItem, navController: NavController) {
                 Text(text = "Email: ${user.email}")
                 Text(
                     text = if (user.isApproved == 1) "Status: Approved" else "Status: Pending",
-                    color = if (user.isApproved == 1) Color.Green else Color.Red
+                    color = if (user.isApproved == 1) Color(0xFF0DB60D) else Color.Red
                 )
             }
 

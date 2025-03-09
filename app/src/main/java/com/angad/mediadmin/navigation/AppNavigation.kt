@@ -31,7 +31,7 @@ fun AppNavigation (viewModel: MyViewModel = hiltViewModel()) {
 
             val userId: String = backStack.arguments?.getString("user_id") ?: ""
             
-            UserDetails(id = userId, viewModel = viewModel, navController = navController)
+            UserDetails(userId = userId, viewModel = viewModel, navController = navController)
 
         }
 
