@@ -88,4 +88,7 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    //  For pie chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 }
