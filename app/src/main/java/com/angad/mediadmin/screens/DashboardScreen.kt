@@ -1,7 +1,7 @@
 package com.angad.mediadmin.screens
 
-import android.graphics.Color
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,18 +13,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.angad.mediadmin.viewmodels.MyViewModel
@@ -87,29 +94,65 @@ fun DashboardScreen(viewModel: MyViewModel = hiltViewModel()) {
 
             Scaffold(
                 topBar = {
-                    TopAppBar(title = { Text(text = "Dashboard") })
+                    TopAppBar(
+                        title = { Text(
+                            text = "Dashboard",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.SansSerif,
+                            textAlign = TextAlign.Center
+                        ) },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color(0xFF66A9EC),
+                            titleContentColor = Color.White
+                        )
+                    )
                 }
             ) { innerPadding ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
+                        .background(Color(0xFFE3F2FD))
                         .verticalScroll(scrollState)
                 ) {
                 //     User approved and pending pie chart card
                    Card(
                        modifier = Modifier
                            .fillMaxWidth()
-                           .padding(8.dp)
+                           .padding(8.dp),
+                       colors = CardDefaults.cardColors(
+                           containerColor = Color(0xFFFFFFFF) // White Card Color
+                       )
                    ) {
                        Column(
-                           modifier = Modifier.padding(16.dp)
+                           modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                           horizontalAlignment = Alignment.CenterHorizontally
                        ) {
-                           Text(text = "Total Users: $totalUser")
+                           Text(
+                               text = "Total Users: $totalUser",
+                               fontWeight = FontWeight.Bold,
+                               fontSize = 20.sp
+                           )
 
-                           Row {
-                               Text(text = "Approved: $approvedUsers")
-                               Text(text = "Pending: $pendingUsers")
+                           Row(
+                               modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 10.dp)
+                           ) {
+                               Text(
+                                   text = "Approved: $approvedUsers",
+                                   fontWeight = FontWeight.SemiBold,
+                                   fontSize = 16.sp,
+                                   modifier = Modifier.weight(1f),
+                                   textAlign = TextAlign.Start
+                               )
+
+                               Text(
+                                   text = "Pending: $pendingUsers",
+                                   fontWeight = FontWeight.SemiBold,
+                                   fontSize = 16.sp,
+                                   modifier = Modifier.weight(1f),
+                                   textAlign = TextAlign.End
+                               )
                            }
 
                        //    For pie chart of user status
@@ -121,13 +164,24 @@ fun DashboardScreen(viewModel: MyViewModel = hiltViewModel()) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFFFFFFF) // White Card Color
+                        )
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "Total Sells Amount:")
-                            Text(text = "₹ $totalSalesAmount")
+                            Text(
+                                text = "Total Sells Amount:",
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = "₹ $totalSalesAmount",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 30.sp
+                            )
                         }
                     }
 
@@ -135,16 +189,40 @@ fun DashboardScreen(viewModel: MyViewModel = hiltViewModel()) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFFFFFFF) // White Card Color
+                        )
                     ) {
                         Column(
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Text(text = "Total Orders: $totalOrders")
+                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
 
-                            Row {
-                                Text(text = "Approved: $approvedOrders")
-                                Text(text = "Pending: $pendingOrders")
+                        ) {
+                            Text(
+                                text = "Total Orders: $totalOrders",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 10.dp)
+                            ) {
+                                Text(
+                                    text = "Approved: $approvedOrders",
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.Start
+                                )
+
+                                Text(
+                                    text = "Pending: $pendingOrders",
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.weight(1f),
+                                    textAlign = TextAlign.End
+                                )
                             }
 
                             //    For pie chart of order status
@@ -171,7 +249,7 @@ fun PieChartView(approvedUsers: Int, pendingUsers: Int) {
                 description.isEnabled = false
                 isDrawHoleEnabled = true
                 setUsePercentValues(true)
-                setEntryLabelColor(Color.BLACK)
+                setEntryLabelColor(android.graphics.Color.BLACK)
                 setEntryLabelTextSize(12f)
                 legend.isEnabled = true
 
@@ -183,7 +261,7 @@ fun PieChartView(approvedUsers: Int, pendingUsers: Int) {
                 val dataSet = PieDataSet(entries, "User Status")
                 dataSet.colors = listOf(ColorTemplate.COLORFUL_COLORS[0], ColorTemplate.COLORFUL_COLORS[1])
                 dataSet.valueTextSize = 14f
-                dataSet.valueTextColor = Color.WHITE
+                dataSet.valueTextColor = android.graphics.Color.WHITE
 
                 data = PieData(dataSet)
                 invalidate() // Refresh the chart
@@ -204,7 +282,7 @@ fun OrderPieChart(approvedOrders: Int, pendingOrders: Int) {
                 description.isEnabled = false
                 isDrawHoleEnabled = true
                 setUsePercentValues(true)
-                setEntryLabelColor(Color.BLACK)
+                setEntryLabelColor(android.graphics.Color.BLACK)
                 setEntryLabelTextSize(12f)
                 legend.isEnabled = true
 
@@ -216,7 +294,7 @@ fun OrderPieChart(approvedOrders: Int, pendingOrders: Int) {
                 val dataSet = PieDataSet(entries, "User Status")
                 dataSet.colors = listOf(ColorTemplate.COLORFUL_COLORS[0], ColorTemplate.COLORFUL_COLORS[1])
                 dataSet.valueTextSize = 14f
-                dataSet.valueTextColor = Color.WHITE
+                dataSet.valueTextColor = android.graphics.Color.WHITE
 
                 data = PieData(dataSet)
                 invalidate() // Refresh the chart

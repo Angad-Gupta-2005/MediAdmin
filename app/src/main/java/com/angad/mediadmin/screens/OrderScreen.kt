@@ -81,7 +81,7 @@ fun OrderScreen(viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                             fontFamily = FontFamily.SansSerif
                         ) },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF1976D2),
+                            containerColor = Color(0xFF66A9EC),
                             titleContentColor = Color.White
                         )
                     )

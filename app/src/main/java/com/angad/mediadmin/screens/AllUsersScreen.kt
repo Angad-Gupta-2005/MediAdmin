@@ -2,14 +2,17 @@ package com.angad.mediadmin.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -23,12 +26,15 @@ import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +59,7 @@ import com.angad.mediadmin.navigation.Routes
 import com.angad.mediadmin.viewmodels.MyViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hiltViewModel()) {
 
@@ -90,17 +98,37 @@ fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hilt
             val users = state.value.data!!
            // state.value.data = null
 
-            Scaffold { innerPadding ->
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(
+                            text = "All Users",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.SansSerif
+                        ) },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color(0xFF66A9EC),
+                            titleContentColor = Color.White
+                        )
+                    )
+                }
+            ) { innerPadding ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(Color(0xFFE3F2FD))
                         .padding(innerPadding)
                 ) {
                     TabRow(
                         selectedTabIndex = selectedTabIndex.value,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = Color(0xFF66A9EC)
                     ){
                         HomeMenu.entries.forEachIndexed { index, currentTab ->
+                            val tabColor = if (index == selectedTabIndex.value) Color.White else Color.LightGray
+                            val fontWeight = if (index == selectedTabIndex.value) FontWeight.Bold else FontWeight.Normal
+
                             Tab(
                                 selected = index == selectedTabIndex.value,
                                 selectedContentColor = MaterialTheme.colorScheme.primary,
@@ -109,17 +137,28 @@ fun AllUsersScreen( navController: NavController, viewModels: MyViewModel = hilt
                                     scope.launch {
                                         pagerState.animateScrollToPage(currentTab.ordinal)
                                     }
-                                },
-                                text = { Text(text = currentTab.title) },
-                                icon = {
+                                }
+                            ){
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                ) {
                                     Icon(
                                         imageVector = if (index == selectedTabIndex.value) currentTab.selectedIcon else currentTab.unselectedIcon,
-                                        contentDescription = currentTab.title
+                                        contentDescription = currentTab.title,
+                                        tint = tabColor
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp)) // Add space between icon and text
+                                    Text(
+                                        text = currentTab.title,
+                                        color = tabColor,
+                                        fontWeight = fontWeight
                                     )
                                 }
-                            )
+                            }
                         }
                     }
+
 
                 //    Horizontal pager
                     HorizontalPager(
@@ -169,7 +208,8 @@ fun UserCard(user: UserModelsItem, navController: NavController) {
                 navController.navigate(Routes.UserDetailsRoutes(user.user_id))
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(Color(0xFFFFFFFF))
     ) {
         Row(
             modifier = Modifier
@@ -181,7 +221,9 @@ fun UserCard(user: UserModelsItem, navController: NavController) {
                 Image(
                     painter = painterResource(id = R.drawable.profile),
                     contentDescription = "Product Icon",
-                    modifier = Modifier.padding(12.dp).size(70.dp),
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .size(70.dp),
                     alignment = Alignment.Center
                 )
             }

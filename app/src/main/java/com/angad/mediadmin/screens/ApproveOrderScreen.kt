@@ -2,6 +2,7 @@ package com.angad.mediadmin.screens
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -81,7 +82,7 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                             fontFamily = FontFamily.SansSerif
                         ) },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF1976D2),
+                            containerColor = Color(0xFF66A9EC),
                             titleContentColor = Color.White
                         )
                     )
@@ -91,6 +92,7 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
+                        .background(Color(0xFFE3F2FD))
                         .verticalScroll(rememberScrollState()), // Scrollable content
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -100,7 +102,10 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 10.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFFFFFFF) // White Card Color
+                        )
                     ) {
                         Row(
                             modifier = Modifier
@@ -148,7 +153,7 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                             // Delete Order Button
                             Button(
                                 onClick = { viewModel.deleteOrder(orderId) },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDB3030)),
                                 shape = MaterialTheme.shapes.small
                             ) {
                                 Text(text = "🗑 Delete Order", color = Color.White)
@@ -160,7 +165,10 @@ fun ApproveOrderScreen(orderId: String, navController: NavController, viewModel:
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(8.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(0xFFFFFFFF) // White Card Color
+                        )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(

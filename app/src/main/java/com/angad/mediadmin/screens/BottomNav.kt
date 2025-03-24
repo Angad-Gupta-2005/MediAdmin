@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.angad.mediadmin.models.BottomNavItem
 
@@ -40,7 +41,10 @@ fun BottomNav(navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color(0xFF66A9EC),
+                contentColor = Color.White,
+            ) {
                 bottomItem.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = selectedIndex == index,

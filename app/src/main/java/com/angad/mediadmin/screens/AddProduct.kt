@@ -1,6 +1,7 @@
 package com.angad.mediadmin.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -94,7 +95,7 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                     fontFamily = FontFamily.SansSerif
                 ) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1976D2),
+                    containerColor = Color(0xFF66A9EC),
                     titleContentColor = Color.White
                 )
             )
@@ -103,6 +104,7 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color(0xFFE3F2FD))
                 .padding(innerPadding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -113,7 +115,7 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.SansSerif,
                 modifier = Modifier.padding(top = 20.dp),
-                color = Color(0xFF1976D2)
+                color = Color(0xFF358BE0)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -123,10 +125,10 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                 onValueChange = { productName.value = it },
                 label = { Text(text = "Product Name", fontWeight = FontWeight.SemiBold, color = Color(0xFF1976D2))},
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors( Color(0xFF1976D2))
+                colors = OutlinedTextFieldDefaults.colors( Color(0xFF66A9EC))
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             //    For product price input
             OutlinedTextField(
@@ -138,10 +140,10 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                     autoCorrectEnabled = true,
                     keyboardType = KeyboardType.Number
                 ),
-                colors = OutlinedTextFieldDefaults.colors( Color(0xFF1976D2))
+                colors = OutlinedTextFieldDefaults.colors( Color(0xFF66A9EC))
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             //    For product category input
             OutlinedTextField(
@@ -149,10 +151,10 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                 onValueChange = { productCategory.value = it },
                 label = { Text(text = "Product Category", fontWeight = FontWeight.SemiBold, color = Color(0xFF1976D2))},
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors( Color(0xFF1976D2))
+                colors = OutlinedTextFieldDefaults.colors( Color(0xFF66A9EC))
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             //    For product stock input
             OutlinedTextField(
@@ -164,15 +166,15 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                     autoCorrectEnabled = true,
                     keyboardType = KeyboardType.Number
                 ),
-                colors = OutlinedTextFieldDefaults.colors( Color(0xFF1976D2))
+                colors = OutlinedTextFieldDefaults.colors( Color(0xFF66A9EC))
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
                 onClick = {
-                    if (productName.value.isNotEmpty() || productPrice.value.isNotEmpty() ||
-                        productCategory.value.isNotEmpty() || productStock.value.isNotEmpty()
+                    if (productName.value.isNotEmpty() && productPrice.value.isNotEmpty() &&
+                        productCategory.value.isNotEmpty() && productStock.value.isNotEmpty()
                     ){
                         viewModel.addProduct(
                             productName = productName.value,
@@ -186,7 +188,7 @@ fun AddProduct( viewModel: MyViewModel = hiltViewModel(), navController: NavCont
                 },
                 modifier = Modifier.padding(10.dp),
                 colors = ButtonColors(
-                    containerColor = Color(0xFF1976D2),
+                    containerColor = Color(0xFF66A9EC),
                     contentColor = Color.White,
                     disabledContainerColor = Color.Gray,
                     disabledContentColor = Color.Black

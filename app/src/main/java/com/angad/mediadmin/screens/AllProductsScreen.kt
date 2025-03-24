@@ -83,7 +83,7 @@ fun AllProductsScreen(navController: NavController, viewModel: MyViewModel = hil
                             fontFamily = FontFamily.SansSerif
                         ) },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF1976D2),
+                            containerColor = Color(0xFF66A9EC),
                             titleContentColor = Color.White
                         )
                     )
@@ -93,7 +93,7 @@ fun AllProductsScreen(navController: NavController, viewModel: MyViewModel = hil
                         navController.navigate(Routes.AddProductRoutes)
                     },
                         modifier = Modifier.padding(bottom = 80.dp),
-                        containerColor = Color(0xFF1976D2),
+                        containerColor = Color(0xFF66A9EC),
                         contentColor = Color.White
                     ) {
                         Icon(
